@@ -13,6 +13,7 @@ class Px{
   tracciato=n_tracciato;
  } 
  void display(float ext_angolo,float x_centro, float y_centro){
+
    float n_x=x_centro + (x-x_centro)*cos(angolo+ext_angolo)- (y-y_centro)*sin(angolo+ext_angolo);
    float n_y=y_centro + (x-x_centro)*sin(angolo+ext_angolo) + (y-y_centro)*cos(angolo+ext_angolo);
   
@@ -25,6 +26,7 @@ class Px{
     if(r_luce>l_punto_luce){
       int prog_tot=round(l_traspare)+10;
       strokeWeight(random(1,2));
+      /*
       for(int prog=1;prog<prog_tot;prog++){
         
         float r_dist=dist(
@@ -47,20 +49,51 @@ class Px{
           n_x+(n_x-g_x_luce)/cos_l*l_traspare/prog_tot*prog+random(-1,1)/prog_tot*prog,
           n_y+(n_y-g_y_luce)/cos_l*l_traspare/prog_tot*prog+random(-1,1)/prog_tot*prog
         );
-      }
-      }
+      }*/
+      
+      
      stroke(255,255,255,100);
-      strokeWeight(1);
-     vertex(n_x,n_y); 
-     // line(n_x,n_y, n_x+(n_x-g_x_luce)/cos_l*l_traspare,n_y+(n_y-g_y_luce)/cos_l*l_traspare);
+     strokeWeight(1);
+     //vertex(
+     line(n_x,n_y, n_x+(n_x-g_x_luce)/cos_l*l_traspare,n_y+(n_y-g_y_luce)/cos_l*l_traspare);
+      
+      }
  }
+ 
+ float[] getRay(float ext_angolo,float x_centro, float y_centro, float n_i, float n_t){
+   float[] ray=new float[4];
+   ray[0]=-1;
+   ray[1]=-1;
+   ray[2]=-1;
+   ray[3]=-1;
+   
+   
+   
+   float n_x=x_centro + (x-x_centro)*cos(angolo+ext_angolo)- (y-y_centro)*sin(angolo+ext_angolo);
+   float n_y=y_centro + (x-x_centro)*sin(angolo+ext_angolo) + (y-y_centro)*cos(angolo+ext_angolo);
+   float cos_l=dist(n_x,n_y,g_x_luce,g_y_luce);
+   float l_punto_luce=dist(0,g_d_luce,cos_l,0);
+   float r_luce=g_r_luce+100*noise(n_i,n_t);//*random(0.99,1.01);
+   float l_traspare = cos_l/ l_punto_luce *(r_luce-l_punto_luce);
+    if(r_luce>l_punto_luce){
+      int prog_tot=round(l_traspare)+10;
+       ray[2]=(n_x-g_x_luce)/cos_l*l_traspare;
+      ray[3]=(n_y-g_y_luce)/cos_l*l_traspare;
+     }  
+     ray[0]=n_x;
+      ray[1]=n_y;
+     
+   return ray;
+   
+ }
+ 
  int getX(){
    return(x);
  }
  int getY(){
    return(y);
  }
- int getTracciato(){
+ int getTracciato(){ 
    return(tracciato);
  }
 }

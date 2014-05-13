@@ -1,4 +1,6 @@
 /*
+Descrizione: 
+
 todo: 
 - salvare da ogni press al release successivo del mouse il tratto disegnato in un array con un livello diverso
 - al release bloccare la possibilià di disegnare
@@ -15,7 +17,17 @@ Premere s o S per spostare la luce di sfondo
 
 
 */
-ArrayList<Px> pxs;
+
+//import javax.media.opengl.*;
+//import processing.opengl.*;
+PImage sfuma;
+
+
+
+
+
+
+ArrayList<Px> pxs = new ArrayList<Px>();  // Create an empty ArrayList
 Control stato=new Control();
 float posX=1;
 float posY=1;
@@ -30,28 +42,53 @@ int g_livello=0;
 float g_diametro=1000;
 float g_y_centro=g_diametro;
 float g_x_centro=0;
-float g_d_luce=150;
+float g_d_luce=800;
 float g_x_luce=0;
 float g_y_luce=0; 
-float g_r_luce=250; 
+float g_r_luce=1000;
 int g_tracciato=0;
 int frame=0;
-
 void setup(){
-  size(500,500);
+  size(1024,600,OPENGL);
+ 
+ 
   stato.setS("setup","avvia");
   g_x_centro=width/2;
   g_x_luce=width/2;
   g_y_luce=height/2;
-  pxs = new ArrayList<Px>();  // Create an empty ArrayList
   background(0);
   time=millis();
+
+
 }
 
 void draw(){
+  
+g_d_luce=800+100*noise(1000+float(millis())/5000.0);
+//  filter(blur); // Blurs more each time through draw()
+    //filter(BLUR, 1);
+
+//  PImage img;
+  
   background(0);
   if (keyPressed) {
-    if (key == 'a' || key == 'A') {
+    if (key == 'q' || key == 'Q') {
+      if(stato.getS("ruota")!="attivo"){
+        stato.setS("registra","disabilitato");
+        stato.setS("ruota","attivo");
+         stato.setS("tracciato","finito");
+        frame=0;
+        
+      }
+    }if (key == 'w' || key == 'W') {
+      if(stato.getS("ruota")!="attivo"){
+        stato.setS("registra","disabilitato");
+        stato.setS("ruota","attivo");
+         stato.setS("tracciato","finito");
+        frame=0;
+        
+      }
+    }if (key == 'a' || key == 'A') {
       if(stato.getS("ruota")!="attivo"){
         stato.setS("registra","disabilitato");
         stato.setS("ruota","attivo");
@@ -89,7 +126,7 @@ void draw(){
   if(stato.getS("registra")=="abilitata" && g_angolo<2*PI){ 
     if(mousePressed){
      
-      g_d_luce=150; 
+     
       stato.setS("tracciato","iniziato");
       registra();
     }else if(stato.getS("tracciato")=="iniziato"){
@@ -106,8 +143,9 @@ void draw(){
       frame++;
      g_angolo+=rotaz/tot_frame_roto;//abs((rotaz/2 * (cos(PI/tot_frame_roto*frame)))-(rotaz/2 * (cos(PI/tot_frame_roto*(frame-1)))));
      // else g_angolo+=(rotaz * abs(sin(PI/tot_frame_roto*(frame-1))))-(rotaz * (sin(PI/tot_frame_roto*(frame))));
-    g_d_luce=150-100/tot_frame_roto*frame;
-    println(frame);
+    //g_d_luce=600;
+    //g_r_luce=800;
+    //println(frame);
     }else{
       stato.setS("ruota","disattivo");
       stato.setS("registra","abilitata");
@@ -117,9 +155,11 @@ void draw(){
   if(g_stato==2 && g_angolo>=2*PI){
     //animazione finale
   }
-disegna();  
+
+
+disegna(pxs);  
   
-saveFrame("starcagate-######.png");  
+//saveFrame("starcagate-######.png");  
   
   
 }
